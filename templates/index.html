@@ -2,168 +2,188 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sentiment Gauge</title>
+    <title>Sentiment Analysis</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<div class="wrap">
+    <!-- Main Container -->
+    <main class="page">
 
-    <div class="eyebrow">
-        A reading instrument
-    </div>
+        <!-- Header -->
+        <header class="header">
 
-    <h1>
-        Sentiment <em>Gauge</em>
-    </h1>
+            <div class="brand">
+                <span class="brand-dot"></span>
+                SENTIMENT ANALYSIS
+            </div>
 
-    <p class="sub">
-        Enter a sentence and the needle reads its emotional pressure.
-    </p>
+            <div class="status">
+                <span class="status-dot"></span>
+                AI MODEL ONLINE
+            </div>
 
-    <div class="instrument">
+        </header>
 
-        <div class="gauge-wrap">
 
-            <svg id="gauge" viewBox="0 0 360 220">
+        <!-- Main Content -->
+        <section class="hero">
 
-                <path d="M 30 172 A 150 150 0 0 1 330 172"
-                    fill="none"
-                    stroke="#3a362f"
-                    stroke-width="14"/>
+            <div class="hero-text">
 
-                <path id="zone-neg"
-                    d="M 30 172 A 150 150 0 0 1 96.5 45.5"
-                    fill="none"
-                    stroke="#b85c4a"
-                    stroke-width="4"/>
+                <p class="eyebrow">
+                    NATURAL LANGUAGE PROCESSING
+                </p>
 
-                <path id="zone-pos"
-                    d="M 263.5 45.5 A 150 150 0 0 1 330 172"
-                    fill="none"
-                    stroke="#6b9b7c"
-                    stroke-width="4"/>
+                <h1>
+                    What does your
+                    <span>text</span>
+                    feel like?
+                </h1>
 
-                <g id="ticks"></g>
-
-                <text x="48"
-                      y="130"
-                      class="zone-label"
-                      text-anchor="middle">
-
-                      NEGATIVE
-
-                </text>
-
-                <text x="312"
-                      y="130"
-                      class="zone-label"
-                      text-anchor="middle">
-
-                      POSITIVE
-
-                </text>
-
-                <g class="needle-group" id="needle-group">
-
-                    <line x1="180"
-                          y1="172"
-                          x2="180"
-                          y2="60"
-                          stroke="#c9a24b"
-                          stroke-width="3"/>
-
-                    <polygon
-                        points="180,55 175,68 185,68"
-                        fill="#c9a24b"/>
-
-                </g>
-
-                <circle
-                    cx="180"
-                    cy="172"
-                    r="9"
-                    fill="#1b1917"
-                    stroke="#c9a24b"
-                    stroke-width="2"/>
-
-            </svg>
-
-            <div class="verdict-block">
-
-                <div
-                    id="verdict"
-                    class="verdict-word empty">
-
-                    Awaiting input
-
-                </div>
-
-                <div
-                    id="score-line"
-                    class="verdict-score">
-
-                    Confidence 0%
-
-                </div>
+                <p class="description">
+                    Enter a sentence, review, or message and let our
+                    machine learning model determine its sentiment.
+                </p>
 
             </div>
 
-        </div>
 
-        <div class="input-row">
+            <!-- Analysis Card -->
+            <div class="analysis-card">
 
-            <div class="slot">
+                <div class="card-header">
 
+                    <div>
+                        <span class="small-label">INPUT</span>
+                        <h2>Analyze your text</h2>
+                    </div>
+
+                    <span class="counter" id="charCount">0 / 500</span>
+
+                </div>
+
+
+                <!-- Text Input -->
                 <textarea
-                    id="sentence"
-                    rows="3"
-                    placeholder="Type your sentence here...">
+                    id="textInput"
+                    maxlength="500"
+                    placeholder="Type something like: I absolutely loved this movie..."
+                ></textarea>
 
-                </textarea>
+
+                <!-- Analyze Button -->
+                <button
+                    id="analyzeBtn"
+                    type="button"
+                >
+                    <span>Analyze Sentiment</span>
+                    <span class="arrow">→</span>
+                </button>
+
+
+                <!-- Loading -->
+                <div
+                    id="loading"
+                    class="loading hidden"
+                >
+                    <span class="spinner"></span>
+                    Analyzing your text...
+                </div>
+
+
+                <!-- Error -->
+                <div
+                    id="error"
+                    class="error hidden"
+                ></div>
+
+
+                <!-- Result -->
+                <div
+                    id="result"
+                    class="result hidden"
+                >
+
+                    <div class="result-top">
+
+                        <div>
+                            <span class="small-label">
+                                PREDICTION
+                            </span>
+
+                            <h2 id="prediction">
+                                —
+                            </h2>
+                        </div>
+
+                        <div class="result-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+
+                    <div class="confidence-section">
+
+                        <div class="confidence-header">
+
+                            <span>
+                                Confidence
+                            </span>
+
+                            <strong id="confidence">
+                                0%
+                            </strong>
+
+                        </div>
+
+                        <div class="confidence-bar">
+                            <div
+                                id="confidenceFill"
+                                class="confidence-fill"
+                            ></div>
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
-            <button id="analyze">
+        </section>
 
-                Analyze
 
-            </button>
+        <!-- Footer -->
+        <footer class="footer">
 
-        </div>
+            <span>
+                Powered by Machine Learning
+            </span>
 
-        <div class="breakdown" id="breakdown">
+            <span>
+                TF-IDF + Logistic Regression
+            </span>
 
-            <div class="breakdown-label">
+        </footer>
 
-                Prediction
+    </main>
 
-            </div>
 
-            <div id="word-chips"
-                 class="word-chips">
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
 
 </body>
 
